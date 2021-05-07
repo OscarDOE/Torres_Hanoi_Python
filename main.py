@@ -3,6 +3,7 @@ from tkinter.filedialog import askopenfilename
 import tkinter 
 from tkinter import ttk
 from tkinter import messagebox
+import time
 
 class Aplicacion:
 
@@ -47,7 +48,9 @@ class Aplicacion:
         self.b3F1 = tkinter.Button(self.F1, text= "Reiniciar", bg= "light green",width=20,command=self.Cancelar)
         self.b3F1.place(x=500,y=10)
 
-
+        self.texto = " SOLUCIÓN \n"
+        self.pasosautomatico = []
+        #self.pasosautomatico.append(["10","15"])
         self.contadormovs = 0
         self.place1 = [10, 420, 200, 450]
         self.place2 = [25, 390, 185, 420]
@@ -63,14 +66,353 @@ class Aplicacion:
 
         self.raiz.mainloop()
 
+    def solucion(self):
+        #botonsolucion = tkinter.Button(self.F1, text= "SOLUCION", bg= "light blue",width=20,command=self.hanoi(self.disco_seleccionado,"1","3","2"))
+        self.botonsolucion = tkinter.Button(self.F1, text= "SOLUCION", bg= "light blue",width=20,command=self.solutipo2)
+        self.botonsolucion.place(x=200,y=50)
+        print("SOLUCIONES               SOLUCION")
+    # DEF REALIZARSOLU YA NO SE UTILIZÖ 
+    #
+    #
+    #
+    #
+    def realizarsolu(self):
+        texto1 = ""
+
+        self.hanoi(self.disco_seleccionado,"1","3","2")
+        print("SE IMPRIMIRA TODA ESTA MADRE")
+        print(self.texto)
+        ventana = tkinter.Tk()
+        ventana.title('Solucion de '+str(self.disco_seleccionado)+' discos')
+        #ventana.geometry('400x250')
+        #ventana.resizable(width=True,height=True)
+        scrollbar = tkinter.Scrollbar(ventana)
+        c = tkinter.Canvas(ventana,background='pink',yscrollcommand=scrollbar.set)
+        #ventanaF1.place(height=520,width=745)
+        scrollbar.config(command=c.yview)
+        scrollbar.pack(side=tkinter.RIGHT,fill=tkinter.Y)
+        elframe = tkinter.Frame(c)
+        c.pack(side="left",fill="both",expand=True)
+        c.create_window(0,0,window=elframe,anchor='nw')
+
+
+        texto = tkinter.Label(elframe, wraplength=250,text= self.texto, bg= "light green")
+        #ventanalabel.place(x=5,y=10)
+        texto.pack()
+        ventana.update()
+        c.config(scrollregion=c.bbox("all"))
+        #ventana.mainloop()
+        self.texto = ""
+
+    def solutipo2(self):
+
+        print("SOLCUOION TIPO 2")
+        self.hanoi(self.disco_seleccionado, "1", "3", "2")
+        print("IMPRIMIENDO PASSOS AUTOMATICO")
+        self.despueshanoi()
+
+
+
     def hanoi(self,n, pivote1,pivote3,pivote2):
         if n == 1:
-            print(pivote1+" -> "+pivote3)
+            #print(pivote1+" -> "+pivote3)
+            self.texto += pivote1+" -> "+pivote3+"\n"
+            self.pasosautomatico.append([pivote1,pivote3])
         else:
             self.contadormovs += 1
             self.hanoi(n-1, pivote1, pivote2, pivote3)
-            print(pivote1 +" -> "+pivote3)
+            #print(pivote1 +" -> "+pivote3)
+            #self.texto +=  pivote1 +" -> "+pivote3+"\n"
+            self.pasosautomatico.append([pivote1,pivote3])
             self.hanoi(n-1, pivote2, pivote3, pivote1)
+    
+    def despueshanoi(self):
+        #texto = int(self.labelmovimientos['text'])
+        #texto += 1
+        #self.labelmovimientos['text'] = texto
+        self.botonsolucion.destroy()
+        self.recorrer(0)
+        #self.F1.after(800,self.despuesdespueshanoi)
+        
+    
+    def despuesdespueshanoi(self):
+        for i in self.pasosautomatico:
+            self.Cancelar2()
+            print(i)
+            if i[0] == "1":
+                self.Cancelar2()
+                tam = len(self.pila1)
+                aux = self.pila1[tam-1]
+                if i[1] == "2":
+                    self.Cancelar2()
+                    tam2 = len(self.pila2)
+                    aux2 = None
+                    if tam2 == 0:
+                        pass
+                    else:
+                        aux2 = self.pila2[tam2-1]
+                    if aux2 is None:
+                        self.pila1.pop()
+                        self.pila2.append(aux)
+                    else:
+                        self.pila1.pop()
+                        self.pila2.append(aux)
+                elif i[1] == "3":
+                    self.Cancelar2()
+                    tam2 = len(self.pila3)
+                    aux2 = None
+                    if tam2 == 0:
+                        pass
+                    else:
+                        aux2 = self.pila3[tam2-1]
+                    if aux2 is None:
+                        self.pila1.pop()
+                        self.pila3.append(aux)
+                    else:
+                        self.pila1.pop()
+                        self.pila3.append(aux)
+                self.Cancelar2()
+                    
+            elif i[0] == "2":
+                self.Cancelar2()
+                tam = len(self.pila2)
+                aux = self.pila2[tam-1]
+                if i[1] == "1":
+                    self.Cancelar2()
+                    tam2 = len(self.pila1)
+                    aux2 = None
+                    if tam2 == 0:
+                        pass
+                    else:
+                        aux2 = self.pila1[tam2-1]
+                    if aux2 is None:
+                        self.pila2.pop()
+                        self.pila1.append(aux)
+                    else:
+                        self.pila2.pop()
+                        self.pila1.append(aux)
+                elif i[1] == "3":
+                    self.Cancelar2()
+                    tam2 = len(self.pila3)
+                    aux2 = None
+                    if tam2 == 0:
+                        pass
+                    else:
+                        aux2 = self.pila3[tam2-1]
+                    if aux2 is None:
+                        self.pila2.pop()
+                        self.pila3.append(aux)
+                    else:
+                        self.pila2.pop()
+                        self.pila3.append(aux)
+                self.Cancelar2()
+                
+            elif i[0] == "3":
+                self.Cancelar2()
+                tam = len(self.pila3)
+                aux = self.pila3[tam-1]
+                if i[1] == "1":
+                    tam2 = len(self.pila1)
+                    aux2 = None
+                    if tam2 == 0:
+                        pass
+                    else:
+                        aux2 = self.pila1[tam2-1]
+                    if aux2 is None:
+                        self.pila3.pop()
+                        self.pila1.append(aux)
+                    else:
+                        self.pila3.pop()
+                        self.pila1.append(aux)
+                elif i[1] == "2":
+                    self.Cancelar2()
+                    tam2 = len(self.pila2)
+                    aux2 = None
+                    if tam2 == 0:
+                        pass
+                    else:
+                        aux2 = self.pila2[tam2-1]
+                    if aux2 is None:
+                        self.pila3.pop()
+                        self.pila2.append(aux)
+                    else:
+                        self.pila3.pop()
+                        self.pila2.append(aux)
+            
+            print("PILA 1: ",self.pila1)
+            print("PILA 2: ",self.pila2)
+            print("PILA 3: ",self.pila3)
+            #texto = int(self.labelmovimientos['text'])
+            #texto += 1
+            #self.labelmovimientos['text'] = texto
+            #time.sleep(1)
+        self.pasosautomatico = []
+        self.F1.after(800,self.despuesdespueshanoi)
+    
+    def recorrer(self,cont):
+        if cont == 0:
+            
+            pass
+        elif cont-1 < len(self.pasosautomatico):
+            if self.pasosautomatico[cont-1][0] == "1" and self.pasosautomatico[cont-1][1] == "2":
+                tam = len(self.pila1)
+                aux = self.pila1[tam-1]
+                self.pila1.pop()
+                self.pila2.append(aux)
+            elif self.pasosautomatico[cont-1][0] == "1" and self.pasosautomatico[cont-1][1] == "3":
+                tam = len(self.pila1)
+                aux = self.pila1[tam-1]
+                self.pila1.pop()
+                self.pila3.append(aux)
+            elif self.pasosautomatico[cont-1][0] == "2" and self.pasosautomatico[cont-1][1] == "1":
+                tam = len(self.pila2)
+                aux = self.pila2[tam-1]
+                self.pila2.pop()
+                self.pila1.append(aux)
+            elif self.pasosautomatico[cont-1][0] == "2" and self.pasosautomatico[cont-1][1] == "3":
+                tam = len(self.pila2)
+                aux = self.pila2[tam-1]
+                self.pila2.pop()
+                self.pila3.append(aux)
+            elif self.pasosautomatico[cont-1][0] == "3" and self.pasosautomatico[cont-1][1] == "1":
+                tam = len(self.pila3)
+                aux = self.pila3[tam-1]
+                self.pila3.pop()
+                self.pila1.append(aux) 
+            elif self.pasosautomatico[cont-1][0] == "3" and self.pasosautomatico[cont-1][1] == "2":
+                tam = len(self.pila3)
+                aux = self.pila3[tam-1]
+                self.pila3.pop()
+                self.pila2.append(aux)
+            texto = int(self.labelmovimientos['text'])
+            texto += 1
+            #print("SE AUMENTO EN 1 EL MOVIMIENTO")
+            self.labelmovimientos['text'] = texto
+                
+        print("LLEGO A ESTE PUNTO?????")
+        cont += 1
+        #self.F1.after(800,self.Cancelar2)
+        if len(self.pila3) == self.disco_seleccionado:
+            self.pasosautomatico = []
+            self.texto = ""
+        else:
+            self.F1.after(800,self.recorrer,cont)
+            
+        self.Cancelar2()
+        
+
+
+    
+    def hanoi3(self,n, pivote1,pivote3,pivote2):
+        if n >= 1:
+            self.hanoi(n-1, pivote1, pivote2, pivote3)
+            #print(pivote1 +" -> "+pivote3)
+            self.pasosautomatico.append([pivote1,pivote3])
+            #self.texto +=  pivote1 +" -> "+pivote3+"\n"
+            self.hanoi(n-1, pivote2, pivote3, pivote1)
+
+    
+    
+    def hanoi2(self,n, pivote1,pivote3,pivote2):
+        if n == 1:
+            print(pivote1+" -> "+pivote3)
+            if pivote1 == "1":
+                tam = len(self.pila1)
+                aux = self.pila1[tam-1]
+                if pivote3 == "2":
+                    tam2 = len(self.pila2)
+                    aux2 = None
+                    if tam2 == 0:
+                        pass
+                    else:
+                        aux2 = self.pila2[tam2-1]
+                    if aux2 is None:
+                        self.pila1.pop()
+                        self.pila2.append(aux)
+                    else:
+                        self.pila1.pop()
+                        self.pila2.append(aux)
+                elif pivote3 == "3":
+                    tam2 = len(self.pila3)
+                    aux2 = None
+                    if tam2 == 0:
+                        pass
+                    else:
+                        aux2 = self.pila3[tam2-1]
+                    if aux2 is None:
+                        self.pila1.pop()
+                        self.pila3.append(aux)
+                    else:
+                        self.pila1.pop()
+                        self.pila3.append(aux)
+                self.Cancelar2()
+                    
+            elif pivote1 == "2":
+                tam = len(self.pila2)
+                aux = self.pila2[tam-1]
+                if pivote3 == "1":
+                    tam2 = len(self.pila1)
+                    aux2 = None
+                    if tam2 == 0:
+                        pass
+                    else:
+                        aux2 = self.pila1[tam2-1]
+                    if aux2 is None:
+                        self.pila2.pop()
+                        self.pila1.append(aux)
+                    else:
+                        self.pila2.pop()
+                        self.pila1.append(aux)
+                elif pivote3 == "3":
+                    tam2 = len(self.pila3)
+                    aux2 = None
+                    if tam2 == 0:
+                        pass
+                    else:
+                        aux2 = self.pila3[tam2-1]
+                    if aux2 is None:
+                        self.pila2.pop()
+                        self.pila3.append(aux)
+                    else:
+                        self.pila2.pop()
+                        self.pila3.append(aux)
+                self.Cancelar2()
+                
+            elif pivote1 == "3":
+                tam = len(self.pila3)
+                aux = self.pila3[tam-1]
+                if pivote3 == "1":
+                    tam2 = len(self.pila1)
+                    aux2 = None
+                    if tam2 == 0:
+                        pass
+                    else:
+                        aux2 = self.pila1[tam2-1]
+                    if aux2 is None:
+                        self.pila3.pop()
+                        self.pila1.append(aux)
+                    else:
+                        self.pila3.pop()
+                        self.pila1.append(aux)
+                elif pivote3 == "2":
+                    tam2 = len(self.pila2)
+                    aux2 = None
+                    if tam2 == 0:
+                        pass
+                    else:
+                        aux2 = self.pila2[tam2-1]
+                    if aux2 is None:
+                        self.pila3.pop()
+                        self.pila2.append(aux)
+                    else:
+                        self.pila3.pop()
+                        self.pila2.append(aux)
+                self.Cancelar2()
+            #time.sleep(1)
+            texto = int(self.labelmovimientos['text'])
+            texto += 1
+            self.labelmovimientos['text'] = texto
+
     
     def Cancelar(self):
         self.F1 = tkinter.Canvas(self.raiz,bg='light blue')
@@ -92,6 +434,7 @@ class Aplicacion:
     def Cancelar2(self):
         #print("CANCELAR 2")
         #print("******************************************************************")
+        
         self.F1 = tkinter.Canvas(self.raiz,bg='light blue')
         self.F1.place(height=520,width=745)
         self.c1 = ttk.Combobox(self.F1,state= "readonly")
@@ -218,11 +561,9 @@ class Aplicacion:
             print("************************************************************************")
             print("************************************************************************")
             print("************************************************************************")
-            messagebox.showinfo("FELICIDADES","HA COMPLETADO EL JUEGO \n Aún puede lograrlo en el menor número de movimientos. \n SUERTE")
-        self.hanoi(self.disco_seleccionado, "0", "2", "1")
+            messagebox.showinfo("FELICIDADES","HA COMPLETADO EL JUEGO \nAún puede lograrlo en el menor número de movimientos. \n   SUERTE")
+        #self.hanoi(self.disco_seleccionado, "1", "3", "2")
 
-    def solucion(self):
-        pass
 
     def escogistediscos(self):
         global F1
@@ -269,6 +610,7 @@ class Aplicacion:
         self.labelmovimientosmin.place(x=580,y=480)
         self.labelmovimientos = tkinter.Label(self.F1,text= "0",bg="light blue")
         self.labelmovimientos.place(x=210,y=480)
+        self.solucion()
         #self.F2.create_line(105,150,105,450,width="25", fill="blue")
         #self.F3.create_line(105,150,105,450,width="25", fill="blue")
         #self.F4.create_line(105,150,105,450,width="25", fill="blue")
@@ -494,7 +836,7 @@ class Aplicacion:
                             self.pila1.pop()
                             self.pila3.append(aux)
                 texto += 1
-                self.pila1
+                
             
         elif torrecita == 2:
             if evento.x >= 280 and evento.x <= 470:
@@ -683,3 +1025,112 @@ b2F1.place(x=200,y=10)
 
 raiz.mainloop()'''
 aplicacion = Aplicacion()
+'''            
+
+        else:
+            self.contadormovs += 1
+            self.hanoi2(n-1, pivote1, pivote2, pivote3)
+            if pivote1 == "1":
+                tam = len(self.pila1)
+                aux = self.pila1[tam-1]
+                if pivote3 == "2":
+                    tam2 = len(self.pila2)
+                    aux2 = None
+                    if tam2 == 0:
+                        pass
+                    else:
+                        aux2 = self.pila2[tam2-1]
+                    if aux2 is None:
+                        self.pila1.pop()
+                        self.pila2.append(aux)
+                    else:
+                        self.pila1.pop()
+                        self.pila2.append(aux)
+                        
+                elif pivote3 == "3":
+                    tam2 = len(self.pila3)
+                    aux2 = None
+                    if tam2 == 0:
+                        pass
+                    else:
+                        aux2 = self.pila3[tam2-1]
+                    if aux2 is None:
+                        self.pila1.pop()
+                        self.pila3.append(aux)
+                    else:
+                        self.pila1.pop()
+                        self.pila3.append(aux)
+                self.Cancelar2()
+                    
+            elif pivote1 == "2":
+                tam = len(self.pila2)
+                aux = self.pila2[tam-1]
+                if pivote3 == "1":
+                    tam2 = len(self.pila1)
+                    aux2 = None
+                    if tam2 == 0:
+                        pass
+                    else:
+                        aux2 = self.pila1[tam2-1]
+                    if aux2 is None:
+                        self.pila2.pop()
+                        self.pila1.append(aux)
+                    else:
+                        self.pila2.pop()
+                        self.pila1.append(aux)
+                elif pivote3 == "3":
+                    tam2 = len(self.pila3)
+                    aux2 = None
+                    if tam2 == 0:
+                        pass
+                    else:
+                        aux2 = self.pila3[tam2-1]
+                    if aux2 is None:
+                        self.pila2.pop()
+                        self.pila3.append(aux)
+                    else:
+                        self.pila2.pop()
+                        self.pila3.append(aux)
+                self.Cancelar2()
+            elif pivote1 == "3":
+                tam = len(self.pila3)
+                aux = self.pila3[tam-1]
+                if pivote3 == "1":
+                    tam2 = len(self.pila1)
+                    aux2 = None
+                    if tam2 == 0:
+                        pass
+                    else:
+                        aux2 = self.pila1[tam2-1]
+                    if aux2 is None:
+                        self.pila3.pop()
+                        self.pila1.append(aux)
+                    else:
+                        self.pila3.pop()
+                        self.pila1.append(aux)
+                elif pivote3 == "2":
+                    tam2 = len(self.pila2)
+                    aux2 = None
+                    if tam2 == 0:
+                        pass
+                    else:
+                        aux2 = self.pila2[tam2-1]
+                    if aux2 is None:
+                        self.pila3.pop()
+                        self.pila2.append(aux)
+                    else:
+                        self.pila3.pop()
+                        self.pila2.append(aux)
+                self.Cancelar2()
+            self.Cancelar2()
+            self.Cancelar2()
+            self.Cancelar2()
+            self.Cancelar2()
+            self.Cancelar2()
+            print(pivote1 +" -> "+pivote3)
+            texto = int(self.labelmovimientos['text'])
+            texto += 1
+            self.labelmovimientos['text'] = texto
+            time.sleep(1)
+            self.Cancelar2()
+            self.hanoi2(n-1, pivote2, pivote3, pivote1)'''
